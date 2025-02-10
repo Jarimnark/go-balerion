@@ -1,10 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strings"
 
 	"github.com/shopspring/decimal"
 )
@@ -54,7 +51,7 @@ func convertIntToThaiText(number int) string {
 		if i < len(chunks)-1 {
 			chunkText += "ล้าน"
 		}
-
+		// fmt.Println("chunkText: ", chunkText)
 		result += chunkText
 	}
 
@@ -94,12 +91,10 @@ func convertSmallIntToThaiText(number int) string {
 }
 
 // Convert a decimal number to Thai currency words
-// Convert a decimal number to Thai currency words
 func convertBahtToThaiText(amount decimal.Decimal) string {
 	integerPart := amount.IntPart()
 	decimalPart := amount.Sub(decimal.NewFromInt(integerPart)).Mul(decimal.NewFromInt(100)).IntPart()
 
-	// Explicitly handle the case where the amount is 0
 	if integerPart == 0 && decimalPart == 0 {
 		return "ศูนย์บาทถ้วน"
 	}
@@ -119,24 +114,19 @@ func convertBahtToThaiText(amount decimal.Decimal) string {
 }
 
 func main() {
-	reader := bufio.NewReader(os.Stdin)
-
-	for {
-		fmt.Print("Enter an amount (or type 'exit' to quit): ")
-		input, _ := reader.ReadString('\n')
-		input = strings.TrimSpace(input)
-
-		if strings.ToLower(input) == "exit" {
-			fmt.Println("Exiting program. Goodbye!")
-			break
-		}
-
-		amount, err := decimal.NewFromString(input)
-		if err != nil {
-			fmt.Println("Invalid input. Please enter a valid number.")
-			continue
-		}
-
-		fmt.Println("Thai currency words:", convertBahtToThaiText(amount))
+	inputs := []decimal.Decimal{
+		decimal.NewFromFloat(1234),
+		decimal.NewFromFloat(33333.75),
+		decimal.NewFromFloat(33333000001234.75),
+		decimal.NewFromFloat(1000000),
+		decimal.NewFromFloat(10000000),
+		decimal.NewFromFloat(111236658912.25),
 	}
+	for _, input := range inputs {
+		fmt.Println(input)
+		// convert decimal to thai text (baht) and print the result here
+		fmt.Println("Thai currency words:", convertBahtToThaiText(input))
+
+	}
+
 }
